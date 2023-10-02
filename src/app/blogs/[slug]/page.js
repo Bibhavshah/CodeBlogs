@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import BlogDetails from '@/src/components/Blog/BlogDetails';
 import RenderDetails from '@/src/components/Blog/RenderDetails';
+import { slug } from 'github-slugger';
 
 export async function generateStaticParams() {
   return allBlogs.map((blog) => {
@@ -19,7 +20,7 @@ export default function BlogPage({ params }) {
       <div className="mb-8 text-center relative w-full h-[70vh] bg-dark">
         <div className="w-full z-10 flex flex-col items-center justify-center absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
           <Link
-            href={`/categories/${blog.tags[0]}`}
+            href={`/categories/${slug(blog.tags[0])}`}
             className="py-3 text-base px-10 border-2 border-light rounded-full bg-dark capitalize font-semibold hover:scale-105 transition-all ease duration-300"
           >
             <span className="text-light">{blog.tags[0]} </span>
