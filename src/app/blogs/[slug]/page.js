@@ -4,6 +4,7 @@ import Image from 'next/image';
 import BlogDetails from '@/src/components/Blog/BlogDetails';
 import RenderDetails from '@/src/components/Blog/RenderDetails';
 import { slug } from 'github-slugger';
+import siteMetadata from '@/src/utils/siteMetadata';
 
 export async function generateStaticParams() {
   return allBlogs.map((blog) => {
@@ -11,6 +12,52 @@ export async function generateStaticParams() {
       slug: blog._raw.flattenedPath,
     };
   });
+}
+
+export async function generateMetadata({ params }) {
+  const blog = allBlogs.find((blog) => blog._raw.flattenedPath === params.slug);
+  if (!blog) {
+    return;
+  }
+
+  const publishedAt = new Date(blog.publishedAt).toISOString();
+  const modifiedAt = new Date(blog.updatedAt || blog.publishedAt).toISOString();
+
+  let imageList = [siteMetadata.socialBanner];
+  if (blog.image) {
+    imageList =
+      typeof blog.image.filePath === 'string'
+        ? [siteMetadata.siteUrl + blog.image.filePath.replace('../public', '')]
+        : blog.image;
+  }
+  const ogImages = imageList.map((img) => {
+    return { url: img.includes('http') ? img : siteMetadata.siteUrl + img };
+  });
+
+  const authors = blog?.author ? [blog.author] : siteMetadata.author;
+
+  return {
+    title: blog.title,
+    description: blog.description,
+    openGraph: {
+      title: blog.title,
+      description: blog.description,
+      url: siteMetadata.siteUrl + blog.url,
+      siteName: siteMetadata.title,
+      locale: 'en_US',
+      type: 'article',
+      publishedTime: publishedAt,
+      modifiedTime: modifiedAt,
+      images: ogImages,
+      authors: authors.length > 0 ? authors : [siteMetadata.author],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: blog.title,
+      description: blog.description,
+      images: ogImages,
+    },
+  };
 }
 
 export default function BlogPage({ params }) {
@@ -40,7 +87,7 @@ export default function BlogPage({ params }) {
           className="w-full h-full rounded-xl object-cover object-center group-hover:scale-105 transition-all ease duration-300"
         />
       </div>
-      <BlogDetails blog={blog} />
+      <BlogDetails blog={blog} slug={params.slug} />
       <div className="flex items-start justify-center gap-16 mt-8 px-10">
         <div className="w-1/2">
           <details

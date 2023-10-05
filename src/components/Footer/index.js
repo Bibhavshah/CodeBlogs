@@ -9,6 +9,7 @@ import {
 } from '../Icons';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
+import siteMetadata from '@/src/utils/siteMetadata';
 
 const Footer = () => {
   const {
@@ -48,19 +49,19 @@ const Footer = () => {
         />
       </form>
       <div className="flex mt-8 items-center mb-32">
-        <a href="http://example.com" className="inline-block w-6 h-6 mr-4 ">
+        <a href={siteMetadata.linkedin} className="inline-block w-6 h-6 mr-4 ">
           <LinkedinIcon className="hover:scale-125 transition-transform ease-in-out delay-75" />
         </a>
-        <a href="http://example.com" className="inline-block w-6 h-6 mr-4 ">
+        <a href={siteMetadata.twitter} className="inline-block w-6 h-6 mr-4 ">
           <TwitterIcon className="hover:scale-125 transition-transform ease-in-out delay-75" />
         </a>
         <a
-          href="http://example.com"
+          href={siteMetadata.github}
           className="inline-block w-6 h-6 mr-4 fill-light"
         >
           <GithubIcon className="hover:scale-125 transition-transform ease-in-out delay-75" />
         </a>
-        <a href="http://example.com" className="inline-block w-6 h-6 mr-4 ">
+        <a href={siteMetadata.dribbble} className="inline-block w-6 h-6 mr-4 ">
           <DribbbleIcon className="hover:scale-125 transition-transform ease-in-out delay-75" />
         </a>
       </div>
